@@ -131,7 +131,7 @@ app.get("/", (req, res) => {
   res.json({
     message: "歡迎使用 CWA 天氣預報 API",
     endpoints: {
-      kaohsiung: "/api/weather/:cityName",
+      kaohsiung: "/api/weather/臺北市",
       health: "/api/health",
     },
   });
@@ -141,7 +141,15 @@ app.get("/api/health", (req, res) => {
   res.json({ status: "OK", timestamp: new Date().toISOString() });
 });
 
-// 取得宜蘭氣預報
+app.get("/api/weather/", (req, res) => {
+    res.status(400).json({ // 使用 400 Bad Request 更合適
+        error: "缺少城市名稱",
+        message: "請在網址後方加上城市名稱，例如: /api/weather/臺北市",
+        example: "https://cwaweather-test.zeabur.app/api/weather/臺北市"
+    });
+});
+
+// 取得城市氣預報
 app.get("/api/weather/:cityName", getWeatherByCity);
 
 // Error handling middleware
