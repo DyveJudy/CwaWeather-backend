@@ -16,11 +16,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 /**
- * 取得高雄天氣預報
+ * 取得宜蘭天氣預報
  * CWA 氣象資料開放平臺 API
  * 使用「一般天氣預報-今明 36 小時天氣預報」資料集
  */
-const getKaohsiungWeather = async (req, res) => {
+const getYilanWeather = async (req, res) => {
   try {
     // 檢查是否有設定 API Key
     if (!CWA_API_KEY) {
@@ -42,13 +42,13 @@ const getKaohsiungWeather = async (req, res) => {
       }
     );
 
-    // 取得高雄市的天氣資料
+    // 取得宜蘭天氣資料
     const locationData = response.data.records.location[0];
 
     if (!locationData) {
       return res.status(404).json({
         error: "查無資料",
-        message: "無法取得高雄市天氣資料",
+        message: "無法取得宜蘭天氣資料",
       });
     }
 
@@ -131,7 +131,7 @@ app.get("/", (req, res) => {
   res.json({
     message: "歡迎使用 CWA 天氣預報 API",
     endpoints: {
-      kaohsiung: "/api/weather/kaohsiung",
+      kaohsiung: "/api/weather/Yilan",
       health: "/api/health",
     },
   });
@@ -141,8 +141,8 @@ app.get("/api/health", (req, res) => {
   res.json({ status: "OK", timestamp: new Date().toISOString() });
 });
 
-// 取得高雄天氣預報
-app.get("/api/weather/kaohsiung", getKaohsiungWeather);
+// 取得宜蘭天氣預報
+app.get("/api/weather/Yilan", getYilanWeather);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
@@ -151,16 +151,4 @@ app.use((err, req, res, next) => {
     error: "伺服器錯誤",
     message: err.message,
   });
-});
-
-// 404 handler
-app.use((req, res) => {
-  res.status(404).json({
-    error: "找不到此路徑",
-  });
-});
-
-app.listen(PORT, () => {
-  console.log(`🚀 伺服器運行已運作`);
-  console.log(`📍 環境: ${process.env.NODE_ENV || "development"}`);
 });
