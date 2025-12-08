@@ -1,9 +1,20 @@
 require("dotenv").config();
 const express = require("express");
-const cors = require("cors");
+const cors = require("cors");// 引入 cors 模組
 const axios = require("axios");
 
 const app = express();
+
+// 新增設定 CORS：允許來自您的 GitHub Pages 網域的請求
+// 請確保這個網域 'https://dyvejudy.github.io' 是準確的
+const corsOptions = {
+  origin: 'https://dyvejudy.github.io', // ⬅️ 必須是您的前端網域
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true, // 允許帶有 Cookie/Header 等憑證
+  optionsSuccessStatus: 204
+}
+// END CORS 設定
+
 const PORT = process.env.PORT || 3000;
 
 // CWA API 設定
@@ -11,7 +22,8 @@ const CWA_API_BASE_URL = "https://opendata.cwa.gov.tw/api";
 const CWA_API_KEY = process.env.CWA_API_KEY;
 
 // Middleware
-app.use(cors());
+// ⚠️ 將原來的 app.use(cors()); 替換成下方的設定
+app.use(cors(corsOptions)); // ⬅️ 啟用帶有您網域的 CORS 設定
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
