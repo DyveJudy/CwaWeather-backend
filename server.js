@@ -185,3 +185,21 @@ app.listen(PORT, () => {
   console.log(`🚀 伺服器運行已運作`);
   console.log(`📍 環境: ${process.env.NODE_ENV || "development"}`);
 }); 
+
+// 新增：保持服務喚醒 (Keep-Alive) 的機制
+const SERVICE_URL = 'https://cwaweather-test.zeabur.app/api/health'; // 替換成您的 API 網址
+const WAKE_INTERVAL = 15 * 60 * 1000; // 每 15 分鐘喚醒一次 (15分鐘 * 60秒 * 1000毫秒)
+
+function keepAlive() {
+    axios.get(SERVICE_URL)
+        .then(res => {
+            console.log(`[KeepAlive] 成功連線至 ${SERVICE_URL}，狀態碼: ${res.status}`);
+        })
+        .catch(err => {
+            console.error(`[KeepAlive] 連線失敗: ${err.message}`);
+        });
+}
+
+// 啟動定時任務
+setInterval(keepAlive, WAKE_INTERVAL); 
+console.log(`[KeepAlive] 已啟動定時喚醒，間隔 ${WAKE_INTERVAL / 1000 / 60} 分鐘`);
