@@ -172,6 +172,16 @@ app.use((err, req, res, next) => {
     message: err.message,
   });
 });
+
+// 404 handler
+app.use((req, res) => {
+  res.status(404).json({
+    error: "找不到此路徑",
+  });
+});
+
+//取消localhost的寫法，改更簡潔版
 app.listen(PORT, () => {
-  console.log(`伺服器啟動於 http://localhost:${PORT}`);
-});  
+  console.log(`🚀 伺服器運行已運作`);
+  console.log(`📍 環境: ${process.env.NODE_ENV || "development"}`);
+}); 
